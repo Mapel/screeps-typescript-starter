@@ -1,0 +1,93 @@
+import {Config} from "config/config";
+import { gameManager } from "./gameManager";
+
+export interface bodyBuildOptions{
+  bodypartRatio: bodyPartRation[],
+  fatigueCompensation?: number,
+  reversed?: boolean,
+  maxEnergy: number
+}
+
+interface bodyPartRation{
+  bodypartstring: BodyPartConstant,
+  quantity: number
+}
+
+export class creepManager {
+
+  private creeps: {[creepName: string]: Creep} = {};
+  private creepNames: string[] = [];
+  public creepCount: number = 0;
+
+  constructor() {
+    this.loadCreeps();
+  }
+
+  public moveCreeps() {
+
+  }
+
+  private loadCreeps(): void {
+    this.creeps = Game.creeps;
+    this.creepCount = _.size(this.creeps);
+
+    this._loadCreepNames();
+
+    if (Config.VERBOSE) {
+      console.log(this.creepCount + " creeps found in the playground.");
+    }
+  }
+
+  private _loadCreepNames(): void {
+    for (let creepName in this.creeps) {
+      if (this.creeps.hasOwnProperty(creepName)) {
+        this.creepNames.push(creepName);
+      }
+    }
+  }
+
+  public createBuild(bodyPartOptions: bodyBuildOptions): string[] {
+    if(!bodyPartOptions.fatigueCompensation){
+      bodyPartOptions.fatigueCompensation = 2;
+    }
+
+    let baseCost = 0;
+    let baseCount = 0;
+    _.forOwn(bodyPartOptions.bodypartRatio, function(v,k) {
+        baseCost += BODYPART_COST[k as BodyPartConstant] * v;
+        baseCount += v;
+    });
+    let repeats = Math.floor(
+      bodyPartOptions.maxEnergy/(baseCost+(25*bodyPartOptions.fatigueCompensation)*baseCount));
+    let moveparts = 1/2*bodyPartOptions.fatigueCompensation*repeats*baseCount;
+    let body = [];
+
+    _.forOwn(bodyPartOptions.bodypartRatio, function(v,k) {
+      for(let i = 0; i < v*repeats; i++) body.push(k); });
+
+    for(let i = 0; i < moveparts; i++) body.push(MOVE);
+
+    return (bodyPartOptions.reversed ? body.reverse() : body);
+  }
+
+  public spawnCreep(spawnToUse: StructureSpawn, buildString?: BodyPartConstant[], spawnOptions?: SpawnOptions, name?: string){
+
+    if(!name){
+      name = 'Creep'+Game.time.toString();
+    }
+    if(!buildString){
+      buildString = [ WORK, CARRY, MOVE, MOVE];
+    }
+
+    var status: ScreepsReturnCode = spawnToUse.canCreateCreep(buildString);
+    if (status == OK) {
+        status = spawnToUse.spawnCreep(buildString, name, spawnOptions)
+
+        if (Config.VERBOSE) {
+            console.log("Started creating new Harvester");
+        }
+    }
+
+        return status;
+  }
+}
