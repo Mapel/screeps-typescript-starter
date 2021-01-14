@@ -10,7 +10,7 @@ export class spawnManager {
     this.loadSpawns();
   }
 
-  private loadSpawns() {
+  public loadSpawns() {
     this.spawns = Game.spawns;
     this.spawnCount = _.size(this.spawns);
 

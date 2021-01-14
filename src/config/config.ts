@@ -12,7 +12,7 @@ export namespace Config {
     /**
      * @type {number}
      */
-    export const MAX_HARVESTERS_PER_SOURCE: number = 4;
+    export const MAX_HARVESTERS_PER_SOURCE: number = 8;
     /**
      * Default amount of minimal ticksToLive Screep can have, before it goes to renew. This is only default value, that don't have to be used.
      * So it doesn't cover all Screeps

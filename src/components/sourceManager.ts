@@ -13,7 +13,7 @@ export class sourceManager {
     this.loadSources();
   }
 
-  private loadSources() {
+  public loadSources() {
       this.sources = this.globalGM.rM.getFirstRoom().find(FIND_SOURCES_ACTIVE);
       this.sourceCount = _.size(this.sources);
 
@@ -24,6 +24,10 @@ export class sourceManager {
 
   public getFirstSource(): Source {
       return this.sources[0];
+  }
+
+  public getNextSource(): void {
+
   }
 
 }

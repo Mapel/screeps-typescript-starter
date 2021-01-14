@@ -1,9 +1,13 @@
 
 export class MemoryManager {
 
-    private memory: Memory;
+    private memory!: Memory;
 
     constructor() {
+
+    }
+
+    public loadMemory(){
       this.memory = Memory;
     }
 }

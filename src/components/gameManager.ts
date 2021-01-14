@@ -2,6 +2,8 @@ import { creepManager } from "./creepManager";
 import { spawnManager } from "./spawnManager";
 import { roomManager } from "./roomManager";
 import { sourceManager } from "./sourceManager";
+import { MemoryManager } from "./memoryManager";
+import {Config} from "config/config";
 
 export class gameManager {
 
@@ -13,6 +15,8 @@ export class gameManager {
 
   public soM: sourceManager = new sourceManager(this);
 
+  public mM: MemoryManager = new MemoryManager();
+
   constructor() {
 
   }
@@ -22,6 +26,22 @@ export class gameManager {
   }
 
   public mainLoop(){
+    this.mM.loadMemory();
+    this.cM.loadCreeps();
 
+    if (Config.VERBOSE) {
+      console.log("Creepcount " + this.cM.creepCount);
+    }
+
+    if (Config.MAX_HARVESTERS_PER_SOURCE > this.cM.creepCount){
+      if (Config.VERBOSE) {
+        console.log("Spawning harvester.");
+      }
+      this.cM.spawnCreep(
+        this.sM.getFirstSpawn(),
+        {memory: {role: 'harvester'}})
+    };
+
+    this.cM.harvestersGoToWork(this.sM.getFirstSpawn(), this.soM.getFirstSource());
   }
 }

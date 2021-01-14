@@ -1,5 +1,6 @@
 import {Config} from "config/config";
 import { gameManager } from "./gameManager";
+import { Harvester } from "creeps/harvester";
 
 export interface bodyBuildOptions{
   bodypartRatio: bodyPartRation[],
@@ -19,15 +20,9 @@ export class creepManager {
   private creepNames: string[] = [];
   public creepCount: number = 0;
 
-  constructor() {
-    this.loadCreeps();
-  }
+  constructor() {}
 
-  public moveCreeps() {
-
-  }
-
-  private loadCreeps(): void {
+  public loadCreeps(): void {
     this.creeps = Game.creeps;
     this.creepCount = _.size(this.creeps);
 
@@ -70,7 +65,7 @@ export class creepManager {
     return (bodyPartOptions.reversed ? body.reverse() : body);
   }
 
-  public spawnCreep(spawnToUse: StructureSpawn, buildString?: BodyPartConstant[], spawnOptions?: SpawnOptions, name?: string){
+  public spawnCreep(spawnToUse: StructureSpawn, spawnOptions?: SpawnOptions, buildString?: BodyPartConstant[], name?: string){
 
     if(!name){
       name = 'Creep'+Game.time.toString();
@@ -81,7 +76,7 @@ export class creepManager {
 
     var status: ScreepsReturnCode = spawnToUse.canCreateCreep(buildString);
     if (status == OK) {
-        status = spawnToUse.spawnCreep(buildString, name, spawnOptions)
+        status = spawnToUse.spawnCreep(buildString, name, spawnOptions);
 
         if (Config.VERBOSE) {
             console.log("Started creating new Harvester");
@@ -89,5 +84,28 @@ export class creepManager {
     }
 
         return status;
+  }
+
+  public harvestersGoToWork(renewStation: StructureSpawn, targetSource: Source, targetEnergyDropOff?: Structure): void {
+
+      let harvesters: Harvester[] = [];
+      _.forEach(this.creeps, function(creep: Creep) {
+          if (creep.memory.role == 'harvester') {
+              let harvester = new Harvester(creep);
+              harvester.setRenewStation(renewStation)
+                .setTargetSource(targetSource)
+                .setEnergyDropOff(targetEnergyDropOff? targetEnergyDropOff: renewStation);
+              // Next move for harvester
+              harvester.action();
+
+              // Save harvester to collection
+              harvesters.push(harvester);
+          }
+      });
+
+      if (Config.VERBOSE) {
+          console.log(harvesters.length + " harvesters reported on duty today!");
+      }
+
   }
 }

@@ -18,12 +18,12 @@ describe("creepManager", () => {
   });
 
   it("should create an object of type GameManager", () => {
-    var GM: creepManager = new creepManager(new gameManager());
+    var GM: creepManager = new creepManager();
     assert.isTrue(typeof GM === "object");
   });
 
     it("should have a methode moveCreeps of Type fuction", () => {
-    var GM: creepManager = new creepManager(new gameManager());
+    var GM: creepManager = new creepManager();
     assert.isTrue(typeof GM.moveCreeps === "function")
   });
 });

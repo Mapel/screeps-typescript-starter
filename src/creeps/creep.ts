@@ -19,12 +19,17 @@ export interface CreepActionInterface {
 export class MyCreep implements CreepActionInterface {
 
     public creep: Creep;
-    public renewStation: StructureSpawn;
+    public renewStation!: StructureSpawn;
 
-    constructor(creep: Creep, renewStation: StructureSpawn){
+    constructor(creep: Creep){
       this.creep = creep;
-      this.renewStation = renewStation;
     }
+
+    public setRenewStation(renewStation: StructureSpawn){
+      this.renewStation = renewStation;
+      return this;
+    }
+
 
     public _minLifeBeforeNeedsRenew: number = Config.DEFAULT_MIN_LIFE_BEFORE_NEEDS_REFILL;
 

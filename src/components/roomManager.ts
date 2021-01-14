@@ -9,7 +9,7 @@ export class roomManager {
       this.loadRooms();
     }
 
-    private loadRooms() {
+    public loadRooms() {
         this.rooms = Game.rooms;
 
         this._loadRoomNames();

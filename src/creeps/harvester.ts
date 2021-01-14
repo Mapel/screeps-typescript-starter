@@ -17,16 +17,22 @@ export interface HarvesterInterface {
 
 export class Harvester extends MyCreep implements HarvesterInterface, CreepActionInterface {
 
-    public targetSource: Source;
-    public targetEnergyDropOff: StructureSpawn|Structure;
+    public targetSource!: Source;
+    public targetEnergyDropOff!: StructureSpawn|Structure;
 
-    constructor(public creep: Creep, renewStation: StructureSpawn, targetSource: Source, targetEnergyDropOff: StructureSpawn){
-      super(creep,renewStation);
+    constructor(public creep: Creep){
+      super(creep);
+    }
 
+    public setTargetSource(targetSource: Source){
       this.targetSource = targetSource;
+      this.creep.memory.targetSource = targetSource.id;
+      return this;
+    }
+
+    public setEnergyDropOff(targetEnergyDropOff: Structure){
       this.targetEnergyDropOff = targetEnergyDropOff;
-
-
+      return this;
     }
 
     public isBagFull(): boolean {
