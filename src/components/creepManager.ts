@@ -1,6 +1,6 @@
 import {Config} from "config/config";
 import { gameManager } from "./gameManager";
-import { Harvester } from "creeps/harvester";
+import { Harvester } from "creeps/worker";
 
 export interface bodyBuildOptions{
   bodypartRatio: bodyPartRation[],
@@ -71,7 +71,7 @@ export class creepManager {
       name = 'Creep'+Game.time.toString();
     }
     if(!buildString){
-      buildString = [ WORK, CARRY, MOVE, MOVE];
+      buildString = Config.DEFAULT_WORKER_BODY;
     }
 
     var status: ScreepsReturnCode = spawnToUse.canCreateCreep(buildString);

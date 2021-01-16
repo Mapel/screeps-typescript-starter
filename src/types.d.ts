@@ -10,6 +10,9 @@
 interface Memory {
   uuid: number;
   log: any;
+  assignements: {[sourceID: string]: {creepNumber: number} };
+  SourceContainer: {[roomName: string]: {[sourceId: string]: {containerPos: RoomPosition}}};
+  roadPaths : string[];
 }
 
 interface CreepMemory {

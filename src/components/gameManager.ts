@@ -13,7 +13,7 @@ export class gameManager {
 
   public rM: roomManager = new roomManager();
 
-  public soM: sourceManager = new sourceManager(this);
+  public soM: sourceManager = new sourceManager(this.rM.rooms);
 
   public mM: MemoryManager = new MemoryManager();
 
@@ -26,22 +26,28 @@ export class gameManager {
   }
 
   public mainLoop(){
+    if (Config.VERBOSE) {
+      console.log("Start loop. Used CPU: " + Game.cpu.getUsed());
+    }
+
     this.mM.loadMemory();
     this.cM.loadCreeps();
 
     if (Config.VERBOSE) {
-      console.log("Creepcount " + this.cM.creepCount);
+      console.log("Creepcount " + this.cM.creepCount + " - Used CPU: " + Game.cpu.getUsed() );
     }
 
-    if (Config.MAX_HARVESTERS_PER_SOURCE > this.cM.creepCount){
+
+
+    if (Config.MAX_HARVESTERS_PER_SOURCE > this.cM.creepCount * this.soM.sourceCount){
       if (Config.VERBOSE) {
-        console.log("Spawning harvester.");
+        console.log("Spawning harvester. - Used CPU: " + Game.cpu.getUsed());
       }
       this.cM.spawnCreep(
         this.sM.getFirstSpawn(),
         {memory: {role: 'harvester'}})
     };
 
-    this.cM.harvestersGoToWork(this.sM.getFirstSpawn(), this.soM.getFirstSource());
+    this.cM.harvestersGoToWork(this.sM.getFirstSpawn(), this.soM.Sources[0]);
   }
 }

@@ -1,13 +1,21 @@
 
 export class MemoryManager {
 
-    private memory!: Memory;
+    private _memory!: Memory;
 
     constructor() {
 
     }
 
+    public get memory(){
+      return this._memory;
+    }
+
     public loadMemory(){
-      this.memory = Memory;
+      this._memory = Memory;
+    }
+
+    public changeSavedAssignment(){
+      //this._memory.assignements[assignement.sourceID].sourceID = assignement.sourceID;
     }
 }
